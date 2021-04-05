@@ -10,6 +10,8 @@ router.post('/signup', async (req, res, next) => {
 
   try {
     await User.create({ username, password })
+    req.session.username = username
+    req.session.password = password
     res.send(`user was created successfully! welcome ${username}`)
   } catch {
     next(new Error('user was not created successfully, please try a different username'))
@@ -23,7 +25,7 @@ router.post('/login', (req, res, next) => {
     if (user) {
       req.session.username = username
       req.session.password = password
-      res.send(`logged out ${res.session}`)
+      res.send('success')
     } else {
       next(new Error('failed to log in'))
     }

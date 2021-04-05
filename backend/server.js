@@ -14,6 +14,8 @@ mongoose.connect(MONGO_URI, {
   useUnifiedTopology: true,
 })
 
+// Integration
+app.use(express.static('dist'))
 app.use(express.json())
 
 app.use(
@@ -32,6 +34,15 @@ const errorHandling = (err, req, res, next) => {
   res.status(500).send(`${err}`)
 }
 app.use(errorHandling)
+
+// Integration
+app.get('/favicon.ico', (req, res) => {
+  res.status(404).send()
+})
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../dist/index.html'))
+})
 
 app.listen(3000, () => {
   console.log('listening on 3000')

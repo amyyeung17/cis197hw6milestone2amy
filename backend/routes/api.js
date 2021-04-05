@@ -33,17 +33,24 @@ router.post('/answer', inAuthenticated, async (req, res, next) => {
   const { question, answer, _id } = req.body
   */
 
-  const { question, answer, _id } = req.body
+  const { answer, _id } = req.body
 
   if (answer === '' || answer === undefined) {
     next(new Error('empty or undefined answer!'))
   }
 
   try {
-    await Question.findOneAndUpdate({ _id }, { answer })
+    await Question.findOneAndUpdate({ _id }, { answer }, { upsert: true })
     res.send('Successful!')
   } catch {
     next(new Error('uh oh! couldnt post an answer, database error!'))
+  }
+})
+
+router.post('/find', (req, res) => {
+  const { username, password } = req.session
+  if (username !== '' && password !== '') {
+    res.send(req.session)
   }
 })
 
